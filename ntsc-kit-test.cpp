@@ -224,7 +224,7 @@ void fill_line([[maybe_unused]]int frameIndex, int lineWithinField, int lineNumb
 {
     int lines = interlaced ? 480 : 240;
 
-    int line = lineNumber - 17;
+    int line = lineNumber;
     int imageY = line * imageHeight / lines;
     if(imageY < 0 || imageY >= imageHeight)
     {
@@ -275,31 +275,6 @@ void fill_line([[maybe_unused]]int frameIndex, int lineWithinField, int lineNumb
             }
             break;
     }
-    if(scope_bits)
-    {
-        for(int sample = 0; sample < maxSamples; sample++)
-        {
-            if(sample < 100)
-            {
-                lineBuffer[sample] |= 0x01;
-            }
-            else
-            {
-                lineBuffer[sample] &= ~0x01;
-            }
-
-            if(lineNumber == 0)
-            {
-                lineBuffer[sample] |= 0x02;
-            }
-            else
-            {
-                lineBuffer[sample] &= ~0x02;
-            }
-
-        }
-    }
-
     if(true)
     {
         static FILE *fp = nullptr;
@@ -443,6 +418,32 @@ int main(int argc, char **argv)
 
     for(int line = 0; line < NTSC_FRAME_LINES; line++) {
         NTSCFillLineBuffer(0, line, buffer + line * samples);
+        if(scope_bits)
+        {
+            for(int sample = 0; sample < samples; sample++)
+            {
+                uint8_t *samplep = buffer + line * samples + sample;
+                if(sample < 100)
+                {
+                    *samplep |= 0x01;
+                }
+                else
+                {
+                    *samplep &= ~0x01;
+                }
+
+                if(line == 0)
+                {
+                    *samplep |= 0x02;
+                }
+                else
+                {
+                    *samplep &= ~0x02;
+                }
+
+            }
+        }
+
     }
 
     if(true) {
