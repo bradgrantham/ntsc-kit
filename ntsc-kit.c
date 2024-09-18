@@ -196,6 +196,14 @@ static void NTSCGenerateLineBuffers(NTSCModeTiming *timing)
 void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuffer)
 {
     NTSCModeTiming *timing = &NTSCCurrentTiming;
+
+    uint8_t *blankLine;
+    if(NTSCModeFuncsValid && NTSCModeNeedsColorburst()) {
+        blankLine = (lineNumber % 2 == 0) ? NTSCBlankLineColorEven : NTSCBlankLineColorOdd;
+    } else {
+        blankLine = NTSCBlankLineBW;
+    }
+
     /*
      * Lines 0 through 8 are equalizing pulse, then vsync, then equalizing pulse
      */
@@ -229,11 +237,7 @@ void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuff
          */
 
         // odd field vblank
-        if(NTSCModeFuncsValid && NTSCModeNeedsColorburst()) {
-            memcpy(lineBuffer, (lineNumber % 2 == 0) ? NTSCBlankLineColorEven : NTSCBlankLineColorOdd, timing->line_samples);
-        } else {
-            memcpy(lineBuffer, NTSCBlankLineBW, timing->line_samples);
-        }
+        memcpy(lineBuffer, blankLine, timing->line_samples);
 
     } else if(lineNumber >= 263 && lineNumber <= 271) {
 
@@ -280,11 +284,7 @@ void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuff
          */
 
         // even field vertical safe area
-        if(NTSCModeFuncsValid && NTSCModeNeedsColorburst()) {
-            memcpy(lineBuffer, (lineNumber % 2 == 0) ? NTSCBlankLineColorEven : NTSCBlankLineColorOdd, timing->line_samples);
-        } else {
-            memcpy(lineBuffer, NTSCBlankLineBW, timing->line_samples);
-        }
+        memcpy(lineBuffer, blankLine, timing->line_samples);
 
     }
     else // if(
@@ -295,11 +295,7 @@ void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuff
 
         // if((lineNumber == (NTSC_EQPULSE_LINES + NTSC_VSYNC_LINES + NTSC_EQPULSE_LINES + NTSC_VBLANK_LINES)) || (lineNumber >= 282))
         // {
-            if(NTSCModeFuncsValid && NTSCModeNeedsColorburst()) {
-                memcpy(lineBuffer, (lineNumber % 2 == 0) ? NTSCBlankLineColorEven : NTSCBlankLineColorOdd, timing->line_samples);
-            } else {
-                memcpy(lineBuffer, NTSCBlankLineBW, timing->line_samples);
-            }
+            memcpy(lineBuffer, blankLine, timing->line_samples);
         // }
 
         int lineWithinFrame;
