@@ -359,9 +359,10 @@ void NTSCSetMode(int interlaced, NTSCLineConfig line_config, void* private_data,
 
 extern int PlatformGetNTSCLineNumber();
 
-void NTSCWaitFrame()
+void NTSCWaitNextField()
 {
-    // Could try to conservatively guess remaining time before vblank and sleep to reduce memory use
+    // Could try to conservatively guess remaining time before
+    // vblank and sleep to reduce memory use
     int field0_vblank;
     int field1_vblank;
     do
@@ -370,6 +371,23 @@ void NTSCWaitFrame()
         field0_vblank = (lineNumber > 257) && (lineNumber < 262);
         field1_vblank = (lineNumber > 520) && (lineNumber < NTSC_FRAME_LINES);
     } while(!field0_vblank && !field1_vblank);
+}
+
+int NTSCWaitNextLine()
+{
+    // Could use a platform sleep or some other sleep mechanism
+    // moderated by the scanout ISR
+    int lineThen = PlatformGetNTSCLineNumber();
+    int lineNow;
+    while((lineNow = PlatformGetNTSCLineNumber()) != lineThen);
+    if(NTSCModeInterlaced)
+    {
+        return (lineNow + 1) % 525;
+    }
+    else
+    {
+        return (lineNow + 1) % 262;
+    }
 }
 
 void NTSCInitialize()

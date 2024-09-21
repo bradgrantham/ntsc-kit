@@ -1,6 +1,14 @@
+#ifndef _NTSC_KIT_H_
+#define _NTSC_KIT_H_
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 
 #define NTSC_COLORBURST_FREQUENCY       3579545
 
@@ -44,7 +52,12 @@ typedef void (*NTSCModeFillLineBufferFunc)(int frameIndex, int lineWithinField, 
 typedef int (*NTSCModeNeedsColorburstFunc)();
 
 void NTSCSetMode(int interlaced, NTSCLineConfig line_config, void* private_data, NTSCModeInitFunc initFunc, NTSCModeFiniFunc finiFunc, NTSCModeFillLineBufferFunc fillBufferFunc, NTSCModeNeedsColorburstFunc needsColorBurstFunc);
-void NTSCWaitFrame();
+void NTSCWaitNextField();
 void NTSCInitialize();
+int NTSCWaitNextLine();
 
-void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuffer);
+#ifdef __cplusplus
+};
+#endif /* __cplusplus */
+
+#endif /* _NTSC_KIT_PLATFORM_H_ */
