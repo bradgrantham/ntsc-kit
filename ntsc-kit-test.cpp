@@ -236,7 +236,7 @@ void fill_line([[maybe_unused]]int frameIndex, int lineWithinField, int lineNumb
     {
         case NTSC_LINE_SAMPLES_910:
             {
-                int sample_phase_offset = (lineWithinField % 2 == 0) ? 0 : 2;
+                int sample_phase_offset = ((frameIndex + lineWithinField) % 2 == 0) ? 0 : 2;
                 for(int sample = 0; sample < maxSamples; sample++)
                 {
                     int imageX = sample * imageWidth / maxSamples;
@@ -275,7 +275,7 @@ void fill_line([[maybe_unused]]int frameIndex, int lineWithinField, int lineNumb
             }
             break;
     }
-    if(true)
+    if(false)
     {
         static FILE *fp = nullptr;
         if(fp == nullptr)
@@ -293,6 +293,8 @@ int needs_colorburst()
 }
 
 extern "C" {
+
+// These correspond to the Rosa 8-bit DAC output
 
 #define DAC_VALUE_LIMIT 0xFF
 
@@ -446,7 +448,7 @@ int main(int argc, char **argv)
 
     }
 
-    if(true) {
+    if(false) {
         FILE *fp = fopen("out.ppm", "wb");
         // Write 2X height and write out each line twice to aid visualization
         fprintf(fp, "P5 %d %d 255\n", samples, lines * 2);
@@ -459,7 +461,9 @@ int main(int argc, char **argv)
     }
 
     printf("#include <stdint.h>\n\n");
-    printf("const uint8_t buffer[] = {");
+    printf("const uint8_t image_samples = %d\n;", samples);
+    printf("const uint8_t image_lines = %d\n;", lines);
+    printf("const uint8_t image[] = {");
     for(size_t i = 0; i < samples * lines; i++)
     {
         if(i % 12 == 0)
