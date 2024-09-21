@@ -199,44 +199,36 @@ void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuff
 
     uint8_t *blankLine;
     if(NTSCModeFuncsValid && NTSCModeNeedsColorburst()) {
-        blankLine = (lineNumber % 2 == 0) ? NTSCBlankLineColorEven : NTSCBlankLineColorOdd;
+        blankLine = ((frameNumber + lineNumber) % 2 == 0) ? NTSCBlankLineColorEven : NTSCBlankLineColorOdd;
     } else {
         blankLine = NTSCBlankLineBW;
     }
 
-    /*
-     * Lines 0 through 8 are equalizing pulse, then vsync, then equalizing pulse
-     */
-
     if(lineNumber < NTSC_EQPULSE_LINES)
     {
 
-        // equalizing pulse
+        // 3 lines of equalizing pulse
         memcpy(lineBuffer, NTSCEqSyncPulseLine, timing->line_samples);
 
     }
     else if(lineNumber - NTSC_EQPULSE_LINES < NTSC_VSYNC_LINES)
     {
 
-        // VSYNC
+        // 3 lines of VSYNC
         memcpy(lineBuffer, NTSCVSyncLine, timing->line_samples);
 
     }
     else if(lineNumber - (NTSC_EQPULSE_LINES + NTSC_VSYNC_LINES) < NTSC_EQPULSE_LINES)
     {
 
-        // equalizing pulse
+        // 3 lines of equalizing pulse
         memcpy(lineBuffer, NTSCEqSyncPulseLine, timing->line_samples);
 
     }
     else if(lineNumber - (NTSC_EQPULSE_LINES + NTSC_VSYNC_LINES + NTSC_EQPULSE_LINES) < NTSC_VBLANK_LINES)
     {
+        /* first field 12 blank lines (closed captioning would be on last line) */
 
-        /*
-         * Lines 9 through 2X are other part of vertical blank
-         */
-
-        // odd field vblank
         memcpy(lineBuffer, blankLine, timing->line_samples);
 
     } else if(lineNumber >= 263 && lineNumber <= 271) {
