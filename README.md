@@ -20,11 +20,11 @@ Include ntsc-kit.h in system headers used by applications.
 Implement the Platform functions in ntsc-kit-platform.h in the system.
 
 * `void PlatformEnableNTSCScanout(NTSCLineConfig line_config, bool interlaced);`
-  * This platform function is called by NTSCSetMode once line buffers are initialize to enable scanout for the specified line_config and interlacing.
+  * This platform function is called by `NTSCSetMode` once line buffers are initialized to enable scanout for the specified line_config and interlacing.
 * `void PlatformDisableNTSCScanout();`
-  * This platform function is called by NTSCSetMode before altering line buffers and timing.  On return any DMA or scanout of line buffers e.g. calls to NTSCFillLineBuffer must be completed
+  * This platform function is called by `NTSCSetMode` before altering line buffers and timing.  On return any DMA or scanout of line buffers, i.e. platform calls to the NTSC Kit function`NTSCFillLineBuffer` must be completed
 * `uint8_t PlatformVoltageToDACValue(float voltage);`
-* `float PlatformDACValueToVoltage(uint8_t dac_value);` 
+  * Platform should convert a voltage to an 8-bit DAC value.  This function is called at initialization time in order to cache NTSC signal levels and is not called from within `NTSCFillLineBuffer` .
 
 
 
