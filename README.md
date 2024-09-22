@@ -1,9 +1,7 @@
 Include ntsc-kit.h in system headers used by applications.
 
-* `void NTSCInitialize();`
-  * Call this function to initialize variables used by the NTSC component.
 * `void NTSCSetMode(bool interlaced, NTSCLineConfig line_config, void* private_data, NTSCModeInitFunc initFunc, NTSCModeFiniFunc finiFunc, NTSCModeFillLineBufferFunc fillLineBufferFunc, NTSCModeNeedsColorburstFunc needsColorBurstFunc);`
-  * Call this function to start an NTSC Mode.
+  * Call this function in an application to start scanning out an NTSC Mode.
 * `void NTSCWaitNextField();`
   * Call this function to wait until scanout has left the visible area of the NTSC "field".  When this returns the scanlines representing the NTSC equalizing pulses, vertical sync, and vertical blanking have begun.  E.g. Wait on this to get a head start processing the next frame before scanout.
   * Line pacing is dictated by the system line scanout hardware, which platforms should endeavour to derive from a 3.579545MHz clock source within .0003%.  For an emulation loop, an application can use this function to move forward emulation for the following amounts of machine time:
@@ -28,8 +26,10 @@ Implement the Platform functions in ntsc-kit-platform.h in the system.
 
 
 
-Call this NTSC-Kit function from Platform scanout:
+Call thes NTSC-Kit function from Platform functions:
+
+* `void NTSCInitialize();`
+  * Call this function from Platform system startup to initialize variables used by the NTSC component.
 
 * `void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuffer);`
-  * This function will call the application's `needsColorBurstFunc` and will fill in the provided `lineBuffer` for the frame and line including calling the application's  `fillLineBufferFunc` for the visible field area.
-
+  * Call this function from the Platform line scanout service function.  This function will call the application's `needsColorBurstFunc` and will fill in the provided `lineBuffer` for the frame and line including calling the application's  `fillLineBufferFunc` for the visible field area.

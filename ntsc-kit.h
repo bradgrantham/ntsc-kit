@@ -53,7 +53,6 @@ typedef int (*NTSCModeNeedsColorburstFunc)();
 
 void NTSCSetMode(bool interlaced, NTSCLineConfig line_config, void* private_data, NTSCModeInitFunc initFunc, NTSCModeFiniFunc finiFunc, NTSCModeFillLineBufferFunc fillBufferFunc, NTSCModeNeedsColorburstFunc needsColorBurstFunc);
 void NTSCWaitNextField();
-void NTSCInitialize();
 int NTSCWaitNextLine();
 
 #ifdef __cplusplus

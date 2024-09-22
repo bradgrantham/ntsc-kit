@@ -16,6 +16,9 @@ uint8_t PlatformVoltageToDACValue(float voltage);
 // beginning scanout of the *other* scanline buffer
 void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuffer);
 
+// Defined by NTSC-KIT, called by platform to initialize state
+void NTSCInitialize();
+
 #ifdef __cplusplus
 };
 #endif /* __cplusplus */
