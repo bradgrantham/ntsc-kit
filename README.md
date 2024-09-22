@@ -5,13 +5,13 @@ Include ntsc-kit.h in system headers used by applications.
 * `void NTSCWaitNextField();`
   * Call this function to wait until scanout has left the visible area of the NTSC "field".  When this returns the scanlines representing the NTSC equalizing pulses, vertical sync, and vertical blanking have begun.  E.g. Wait on this to get a head start processing the next frame before scanout.
   * Line pacing is dictated by the system line scanout hardware, which platforms should endeavour to derive from a 3.579545MHz clock source within .0003%.  For an emulation loop, an application can use this function to move forward emulation for the following amounts of machine time:
-    * NTSC_LINE_SAMPLES_910: 227.5 colorburst cycles, 63.556µs of machine time, or a 15734.264Hz clock
-    * NTSC_LINE_SAMPLES_912 and NTSC_LINE_SAMPLES_1368: 228 colorburst cycles, 63.695µs of machine time, or a 15699.75Hz clock.
+    * `NTSC_LINE_SAMPLES_910`: 227.5 colorburst cycles, 63.556µs of machine time, or a 15734.264Hz clock
+    * `NTSC_LINE_SAMPLES_912` and `NTSC_LINE_SAMPLES_1368`: 228 colorburst cycles, 63.695µs of machine time, or a 15699.75Hz clock.
 * `int NTSCWaitNextLine();`
   * This function returns with a line value "N" once scanout has begin on line N - 2 and the `fillBufferFunc` function is in progress filling the buffer for line N - 1 .  E.g. Wait on this to perform processing for line N.
   * For an emulation loop, an application can use this function to move forward emulation for the following amounts of machine time:
-    * NTSC_LINE_SAMPLES_910: 16.72ms
-    * NTSC_LINE_SAMPLES_912 and NTSC_LINE_SAMPLES_1368: 16.68ms
+    * `NTSC_LINE_SAMPLES_910`: 16.72ms
+    * `NTSC_LINE_SAMPLES_912` and `NTSC_LINE_SAMPLES_1368`: 16.68ms
 
 
 
