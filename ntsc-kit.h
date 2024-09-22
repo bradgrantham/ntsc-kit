@@ -51,7 +51,7 @@ typedef void (*NTSCModeFiniFunc)(void* private_data);
 typedef void (*NTSCModeFillLineBufferFunc)(int frameIndex, int lineWithinField, int lineNumber, size_t maxSamples, uint8_t* lineBuffer);
 typedef int (*NTSCModeNeedsColorburstFunc)();
 
-void NTSCSetMode(int interlaced, NTSCLineConfig line_config, void* private_data, NTSCModeInitFunc initFunc, NTSCModeFiniFunc finiFunc, NTSCModeFillLineBufferFunc fillBufferFunc, NTSCModeNeedsColorburstFunc needsColorBurstFunc);
+void NTSCSetMode(bool interlaced, NTSCLineConfig line_config, void* private_data, NTSCModeInitFunc initFunc, NTSCModeFiniFunc finiFunc, NTSCModeFillLineBufferFunc fillBufferFunc, NTSCModeNeedsColorburstFunc needsColorBurstFunc);
 void NTSCWaitNextField();
 void NTSCInitialize();
 int NTSCWaitNextLine();

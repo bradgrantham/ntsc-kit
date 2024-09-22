@@ -47,11 +47,10 @@ typedef struct NTSCModeTiming
 } NTSCModeTiming;
 
 static int NTSCCurrentLineConfig = NTSC_LINE_SAMPLES_UNINITIALIZED;
+static bool NTSCModeInterlaced = true;
 static NTSCModeTiming NTSCCurrentTiming;
 
-static int NTSCModeInterlaced = 1;
-
-static int NTSCModeFuncsValid = 0;
+static bool NTSCModeFuncsValid = false;
 
 static void* NTSCModePrivateData = NULL;
 static NTSCModeFiniFunc NTSCModeFinalize = NULL;
@@ -160,7 +159,7 @@ static void NTSCAddColorburst(NTSCModeTiming* timing, unsigned char *lineBuffer,
     }
 }
 
-static void NTSCFillBlankLine(NTSCModeTiming *timing, unsigned char *lineBuffer, int withColorburst, int lineNumber)
+static void NTSCFillBlankLine(NTSCModeTiming *timing, unsigned char *lineBuffer, bool withColorburst, int lineNumber)
 {
     memset(lineBuffer, NTSCBlack, timing->line_samples);
     for (int col = 0; col < timing->line_samples; col++)
@@ -311,7 +310,7 @@ void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuff
     }
 }
 
-void NTSCSetMode(int interlaced, NTSCLineConfig line_config, void* private_data, NTSCModeInitFunc initFunc, NTSCModeFiniFunc finiFunc, NTSCModeFillLineBufferFunc fillBufferFunc, NTSCModeNeedsColorburstFunc needsColorBurstFunc)
+void NTSCSetMode(bool interlaced, NTSCLineConfig line_config, void* private_data, NTSCModeInitFunc initFunc, NTSCModeFiniFunc finiFunc, NTSCModeFillLineBufferFunc fillBufferFunc, NTSCModeNeedsColorburstFunc needsColorBurstFunc)
 {
     int same_config = 
         (NTSCModeInterlaced == interlaced) &&
@@ -326,7 +325,7 @@ void NTSCSetMode(int interlaced, NTSCLineConfig line_config, void* private_data,
         return;
     }
 
-    NTSCModeFuncsValid = 0;
+    NTSCModeFuncsValid = false;
 
     if(NTSCModeFinalize != NULL)
     {
@@ -352,9 +351,9 @@ void NTSCSetMode(int interlaced, NTSCLineConfig line_config, void* private_data,
 
     NTSCCurrentLineConfig = line_config;
 
-    NTSCModeFuncsValid = 1;
+    NTSCModeFuncsValid = true;
 
-    PlatformEnableNTSCScanout();
+    PlatformEnableNTSCScanout(line_config, interlaced);
 }
 
 extern int PlatformGetNTSCLineNumber();

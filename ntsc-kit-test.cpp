@@ -321,7 +321,7 @@ void PlatformDisableNTSCScanout()
 {
 }
 
-void PlatformEnableNTSCScanout()
+void PlatformEnableNTSCScanout([[maybe_unused]] NTSCLineConfig line_config, [[maybe_unused]] bool interlaced)
 {
 }
 

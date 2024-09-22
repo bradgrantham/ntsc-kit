@@ -8,12 +8,11 @@ extern "C" {
 #endif /* __cplusplus */
 
 // Defined by platform, called by NTSC-Kit
-void PlatformEnableNTSCScanout();
+void PlatformEnableNTSCScanout(NTSCLineConfig line_config, bool interlaced);
 void PlatformDisableNTSCScanout();
 uint8_t PlatformVoltageToDACValue(float voltage);
-float PlatformDACValueToVoltage(uint8_t dac_value);
 
-// Defined by NTSC-KIT, called by platform, preferably right after
+// Defined by NTSC-KIT, called by platform, preferably immediately after
 // beginning scanout of the *other* scanline buffer
 void NTSCFillLineBuffer(int frameNumber, int lineNumber, unsigned char *lineBuffer);
 
