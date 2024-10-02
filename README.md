@@ -26,7 +26,7 @@ Implement the Platform functions in ntsc-kit-platform.h in the system.
 
 
 
-Call thes NTSC-Kit function from Platform functions:
+Call these NTSC-Kit function from Platform functions:
 
 * `void NTSCInitialize();`
   * Call this function from Platform system startup to initialize variables used by the NTSC component.
