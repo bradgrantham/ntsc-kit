@@ -225,7 +225,7 @@ void fill_line([[maybe_unused]]int frameIndex, int lineWithinField, int lineNumb
     int lines = interlaced ? 480 : 240;
 
     int line = lineNumber;
-    int imageY = line * imageHeight / lines;
+    unsigned int imageY = line * imageHeight / lines;
     if(imageY < 0 || imageY >= imageHeight)
     {
         memset(lineBuffer, (blackValue + whiteValue) / 2, maxSamples);
@@ -237,7 +237,7 @@ void fill_line([[maybe_unused]]int frameIndex, int lineWithinField, int lineNumb
         case NTSC_LINE_SAMPLES_910:
             {
                 int sample_phase_offset = ((frameIndex + lineWithinField) % 2 == 0) ? 0 : 2;
-                for(int sample = 0; sample < maxSamples; sample++)
+                for(unsigned int sample = 0; sample < maxSamples; sample++)
                 {
                     int imageX = sample * imageWidth / maxSamples;
                     float *color = imagePixels + 4 * (imageX + imageY * imageWidth);
@@ -250,7 +250,7 @@ void fill_line([[maybe_unused]]int frameIndex, int lineWithinField, int lineNumb
             break;
         case NTSC_LINE_SAMPLES_912:
             {
-                for(int sample = 0; sample < maxSamples; sample++)
+                for(unsigned int sample = 0; sample < maxSamples; sample++)
                 {
                     int imageX = sample * imageWidth / maxSamples;
                     float *color = imagePixels + 4 * (imageX + imageY * imageWidth);
@@ -263,7 +263,7 @@ void fill_line([[maybe_unused]]int frameIndex, int lineWithinField, int lineNumb
             break;
         case NTSC_LINE_SAMPLES_1368:
             {
-                for(int sample = 0; sample < maxSamples; sample++)
+                for(unsigned int sample = 0; sample < maxSamples; sample++)
                 {
                     int imageX = sample * imageWidth / maxSamples;
                     float *color = imagePixels + 4 * (imageX + imageY * imageWidth);
@@ -330,7 +330,7 @@ void PlatformEnableNTSCScanout([[maybe_unused]] NTSCLineConfig line_config, [[ma
 int main(int argc, char **argv)
 {
     uint8_t buffer[1368 * NTSC_FRAME_LINES];
-    int samples = 912;
+    uint32_t samples = 912;
 
     if(argc < 2) {
         fprintf(stderr, "usage: %s inputppm\n", argv[0]);
@@ -387,7 +387,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    int lines = interlaced ? 525 : 262;
+    uint32_t lines = interlaced ? 525 : 262;
 
     if(false)
     {
@@ -422,7 +422,7 @@ int main(int argc, char **argv)
         NTSCFillLineBuffer(0, line, buffer + line * samples);
         if(scope_bits)
         {
-            for(int sample = 0; sample < samples; sample++)
+            for(uint32_t sample = 0; sample < samples; sample++)
             {
                 uint8_t *samplep = buffer + line * samples + sample;
                 if(sample < 100)
@@ -464,7 +464,7 @@ int main(int argc, char **argv)
     printf("const uint8_t image_samples = %d\n;", samples);
     printf("const uint8_t image_lines = %d\n;", lines);
     printf("const uint8_t image[] = {");
-    for(size_t i = 0; i < samples * lines; i++)
+    for(size_t i = 0; i < static_cast<size_t>(samples * lines); i++)
     {
         if(i % 12 == 0)
         {

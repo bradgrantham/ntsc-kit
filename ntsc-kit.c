@@ -318,7 +318,7 @@ void NTSCSetMode(bool interlaced, NTSCLineConfig line_config, void* private_data
         (finiFunc == NTSCModeFinalize) &&
         (fillBufferFunc == NTSCModeFillLineBuffer) &&
         (needsColorBurstFunc == NTSCModeNeedsColorburst) &&
-        (line_config == NTSCCurrentLineConfig);
+        ((int)line_config == NTSCCurrentLineConfig);
 
     if(NTSCModeFuncsValid && same_config)
     {
