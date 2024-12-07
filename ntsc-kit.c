@@ -325,16 +325,16 @@ void NTSCSetMode(bool interlaced, NTSCLineConfig line_config, void* private_data
         return;
     }
 
+    if(NTSCCurrentLineConfig != NTSC_LINE_SAMPLES_UNINITIALIZED)
+    {
+        PlatformDisableNTSCScanout();
+    }
+
     NTSCModeFuncsValid = false;
 
     if(NTSCModeFinalize != NULL)
     {
         NTSCModeFinalize(NTSCModePrivateData);
-    }
-
-    if(NTSCCurrentLineConfig != NTSC_LINE_SAMPLES_UNINITIALIZED)
-    {
-        PlatformDisableNTSCScanout();
     }
 
     NTSCCalculateLineClocks(&NTSCCurrentTiming, line_config);
